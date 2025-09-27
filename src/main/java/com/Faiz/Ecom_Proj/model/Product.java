@@ -23,8 +23,6 @@ public class Product {
     private String price;
     private int stockQuantity;
     private String category;
-
-    @Temporal(TemporalType.DATE)
     private Date releseDate;
 
     private boolean productAvailable;
