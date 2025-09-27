@@ -3,10 +3,10 @@ package com.Faiz.Ecom_Proj.controller;
 import com.Faiz.Ecom_Proj.model.Product;
 import com.Faiz.Ecom_Proj.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,7 +19,35 @@ public class ProductController {
     ProductService service;
 
     @GetMapping("/products")
-    public List<Product> getProducts(){
-        return service.getProducts();
+    public ResponseEntity<List<Product>> getProducts() {
+        return new ResponseEntity<>(service.getProducts(), HttpStatus.OK);
     }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
+        Product product = service.getProductById(id);
+        if (product != null) {
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/product")
+    public ResponseEntity<?> addProduct(@RequestPart Product product,@RequestPart MultipartFile imageFile) {
+        try{
+            Product product1=service.addProduct(product,imageFile);
+            return new ResponseEntity<>(product1,HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/product/{id}/image")
+    public ResponseEntity<byte[]> getProduct(@PathVariable Integer id) {
+       Product product = service.getProductById(id);
+       byte[] image= product.getImageData();
+       return new ResponseEntity<>(image, HttpStatus.OK);
+    }
+
 }

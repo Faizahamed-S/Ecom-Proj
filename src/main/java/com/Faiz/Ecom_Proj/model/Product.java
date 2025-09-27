@@ -19,11 +19,20 @@ public class Product {
 
     private String name;
     private String description;
+    private String brand;
     private String price;
-    private int quantity;
+    private int stockQuantity;
     private String category;
 
     @Temporal(TemporalType.DATE)
     private Date releseDate;
+
+    private boolean productAvailable;
+    private String imageName;
+    private String imageType;
+
+    @Lob
+    private byte[] imageData;
+
 
 }
